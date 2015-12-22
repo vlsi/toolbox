@@ -21,7 +21,7 @@ limitations under the License.
   <!-- The basics. -->
   <groupId>net.hydromatic</groupId>
   <artifactId>toolbox</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <packaging>jar</packaging>
 
   <!-- More project information. -->
@@ -101,7 +101,7 @@ limitations under the License.
     <connection>scm:git:git://github.com/julianhyde/toolbox.git</connection>
     <developerConnection>scm:git:git@github.com:julianhyde/toolbox.git</developerConnection>
     <url>scm:git:git://github.com/julianhyde/toolbox.git</url>
-    <tag>HEAD</tag>
+    <tag>toolbox-0.1</tag>
   </scm>
 
   <!-- Dependencies. -->
