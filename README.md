@@ -31,13 +31,13 @@ Toolbox requires Java (1.7 or higher; 1.8 preferred), git, maven (3.2.1 or highe
 ### From Maven
 
 Get Toolbox from
-<a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3Anet.hydromatic%20a%3Atoolbox">Maven central</a>:
+<a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3Anet.hydromatic%20a%3Atoolbox">Maven Central</a>:
 
 ```xml
 <dependency>
   <groupId>net.hydromatic</groupId>
   <artifactId>toolbox</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 </dependency>
 ```
 

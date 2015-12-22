@@ -28,7 +28,8 @@ see <a href="https://github.com/julianhyde/toolbox/releases">github</a>.
 
 ## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.1">0.1</a> 2015-12-21
 
-* Publish releases to <a href="http://search.maven.org/">Maven Central</a>
+* Publish releases to
+  <a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3Anet.hydromatic%20a%3Atoolbox">Maven Central</a>
 * Enable Travis CI
 * [<a href="https://github.com/julianhyde/toolbox/issues/1">TOOLBOX-1</a>]
   Add `HydromaticFileSetCheck`, a checkstyle plugin for Calcite's coding style
