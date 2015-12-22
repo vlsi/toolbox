@@ -21,6 +21,11 @@ limitations under the License.
 For a full list of releases,
 see <a href="https://github.com/julianhyde/toolbox/releases">github</a>.
 
+## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.2">0.2</a> 2015-12-22
+
+* Fix several broken rules
+* Pre-compute regular expression patterns
+
 ## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.1">0.1</a> 2015-12-21
 
 * Publish releases to <a href="http://search.maven.org/">Maven Central</a>

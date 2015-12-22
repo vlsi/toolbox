@@ -20,11 +20,20 @@ import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Checker that applies some custom checks to each file.
  */
 public class HydromaticFileSetCheck extends AbstractFileSetCheck {
+
+  private static final Pattern PATTERN1 = Pattern.compile(".*\\\\n\" \\+ .*");
+  private static final Pattern PATTERN2 = Pattern.compile("^\\{@link .*\\}$");
+  private static final Pattern PATTERN3 = Pattern.compile(".*@param +[^ ]+ *$");
+  private static final Pattern PATTERN4 = Pattern.compile(".* href=.*CALCITE-.*");
+  private static final Pattern PATTERN5 = Pattern.compile(
+      ".*<a href=\"https://issues.apache.org/jira/browse/CALCITE-[0-9]+\">\\[CALCITE-[0-9]+\\].*");
+
   boolean isProto(File file) {
     return file.getAbsolutePath().contains("/proto/")
         || file.getName().endsWith("Base64.java");
@@ -35,7 +44,7 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
   }
 
   void afterFile(File file, List<String> lines) {
-    if (file.getName().matches(".*\\.java$")) {
+    if (file.getName().endsWith(".java")) {
       String b = file.getName().replaceAll(".*/", "");
       final String line = "// End " + b;
       if (!last(lines).equals(line) && !isProto(file)) {
@@ -45,19 +54,10 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
   }
 
   protected void processFiltered(File file, List<String> list) {
-    try {
-      processFiltered2(file, list);
-    } catch (StackOverflowError e) {
-      System.out.println(file);
-      throw e;
-    }
-  }
-
-  protected void processFiltered2(File file, List<String> list) {
     boolean off = false;
     int endCount = 0;
     int maxLineLength = 80;
-    if (file.getAbsolutePath().matches(".*/calcite/.*")) {
+    if (file.getAbsolutePath().contains("/calcite/")) {
       maxLineLength = 100;
     }
     int i = 0;
@@ -80,7 +80,7 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
           log(i, "End seen more than once");
         }
       }
-      if (line.matches(".*\\\\n\".*")) {
+      if (isMatches(PATTERN1, line)) {
         log(i, "Newline in string should be at end of line");
       }
       if (line.contains("{@link")) {
@@ -99,22 +99,19 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
           && line.length() > maxLineLength) {
         String s = line
             .replaceAll("^ *\\* *", "")
-            .replaceAll(" \\*\\/$", "")
+            .replaceAll(" \\*/$", "")
             .replaceAll("[;.,]$", "")
             .replaceAll("<li>", "");
-        if (!s.matches("^\\{@link .*\\}$")
+        if (!isMatches(PATTERN2, s)
             && !file.getName().endsWith("CalciteResource.java")) {
           log(i, "Javadoc line too long ({0} chars)", line.length());
         }
       }
-      if (line.matches(".*\\@param +[^ ]+ *$")) {
+      if (isMatches(PATTERN3, line)) {
         log(i, "Parameter with no description");
       }
-      if (line.matches(".* href=.*CALCITE-.*")) {
-        if (!line.matches(
-            ".*<a href=\"https://issues.apache.org/jira/browse/CALCITE-[0-9]+\">\\[CALCITE-[0-9]+\\].*")) {
-          log(i, "Bad JIRA reference");
-        }
+      if (isMatches(PATTERN4, line) && !isMatches(PATTERN5, line)) {
+        log(i, "Bad JIRA reference");
       }
       if (file.getName().endsWith(".java")
           && (line.contains("(") || line.contains(")"))) {
@@ -136,6 +133,10 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
       }
     }
     afterFile(file, list);
+  }
+
+  private boolean isMatches(Pattern pattern, String line) {
+    return pattern.matcher(line).matches();
   }
 
   static String deString(String line) {
