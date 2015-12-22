@@ -71,6 +71,8 @@ limitations under the License.
     <top.dir>${project.basedir}</top.dir>
     <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
     <gpg.useagent>true</gpg.useagent>
+    <checkstyleVersion>5.7</checkstyleVersion>
+    <junitVersion>4.12</junitVersion>
   </properties>
 
   <!-- Environment settings. -->
@@ -110,6 +112,23 @@ limitations under the License.
       <!-- We support versions as old as 14.0.1 (the version used by
            Hive) but prefer more recent versions. -->
       <version>14.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.puppycrawl.tools</groupId>
+      <artifactId>checkstyle</artifactId>
+      <version>${checkstyleVersion}</version>
+      <exclusions>
+        <!-- MCHECKSTYLE-156 -->
+        <exclusion>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junitVersion}</version>
     </dependency>
   </dependencies>
 

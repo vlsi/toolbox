@@ -26,7 +26,22 @@ A collection of miscellaneous utilities.
 
 Toolbox requires Java (1.7 or higher; 1.8 preferred), git, maven (3.2.1 or higher).
 
-## Download and build
+## Get Toolbox
+
+### From Maven
+
+Get Toolbox from
+<a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3Anet.hydromatic%20a%3Atoolbox">Maven central</a>:
+
+```xml
+<dependency>
+  <groupId>net.hydromatic</groupId>
+  <artifactId>toolbox</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+
+### Download and build
 
 ```bash
 $ git clone git://github.com/julianhyde/toolbox.git

@@ -18,8 +18,11 @@ limitations under the License.
 -->
 # Toolbox release history and change log
 
-For a full list of releases, see <a href="https://github.com/julianhyde/toolbox/releases">github</a>.
+For a full list of releases,
+see <a href="https://github.com/julianhyde/toolbox/releases">github</a>.
 
-## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.1">0.1</a> (under development)
+## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.1">0.1</a> 2015-12-21
 
+* [<a href="https://github.com/julianhyde/toolbox/issues/1">TOOLBOX-1</a>]
+  Add `HydromaticFileSetCheck`, a checkstyle plugin for Calcite's coding style
 * Publish releases to <a href="http://search.maven.org/">Maven Central</a>
