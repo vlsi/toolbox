@@ -21,6 +21,11 @@ limitations under the License.
 For a full list of releases,
 see <a href="https://github.com/julianhyde/toolbox/releases">github</a>.
 
+## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.3">0.3</a> 2016-01-12
+
+* [<a href="https://github.com/julianhyde/toolbox/issues/2">TOOLBOX-2</a>]
+  Incorrect max line length on Windows
+
 ## <a href="https://github.com/julianhyde/toolbox/releases/tag/toolbox-0.2">0.2</a> 2015-12-22
 
 * Fix several broken rules

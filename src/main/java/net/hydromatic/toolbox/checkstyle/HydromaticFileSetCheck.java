@@ -57,7 +57,9 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
     boolean off = false;
     int endCount = 0;
     int maxLineLength = 80;
-    if (file.getAbsolutePath().contains("/calcite/")) {
+    final String path = file.getAbsolutePath()
+        .replace('\\', '/'); // for windows
+    if (path.contains("/calcite/")) {
       maxLineLength = 100;
     }
     int i = 0;

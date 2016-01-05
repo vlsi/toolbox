@@ -37,7 +37,7 @@ Get Toolbox from
 <dependency>
   <groupId>net.hydromatic</groupId>
   <artifactId>toolbox</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
 </dependency>
 ```
 
