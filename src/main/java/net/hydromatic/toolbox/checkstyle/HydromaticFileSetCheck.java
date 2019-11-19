@@ -17,9 +17,9 @@
 package net.hydromatic.toolbox.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 
 import java.io.File;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -34,26 +34,35 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
   private static final Pattern PATTERN5 = Pattern.compile(
       ".*<a href=\"https://issues.apache.org/jira/browse/CALCITE-[0-9]+\">\\[CALCITE-[0-9]+\\].*");
 
+  private boolean checkClosingComment = true;
+  private boolean checkNewLineAtEndOfFile = true;
+  private boolean checkSplitLink = true;
+  private boolean checkOverrideSameLine = true;
+  private boolean checkOrphanP = true;
+  private boolean checkParameterWithoutDescription = true;
+  private boolean checkBadJiraReference = true;
+  private boolean checkOpenParenthesesLevel = true;
+  private boolean checkJavadocTooLong = true;
+  private boolean checkTabs = true;
+
   boolean isProto(File file) {
     return file.getAbsolutePath().contains("/proto/")
         || file.getName().endsWith("Base64.java");
   }
 
-  static <E> E last(List<E> list) {
-    return list.get(list.size() - 1);
-  }
-
-  void afterFile(File file, List<String> lines) {
-    if (file.getName().endsWith(".java")) {
+  void afterFile(File file, FileText fileText) {
+    if (checkClosingComment && file.getName().endsWith(".java")) {
       String b = file.getName().replaceAll(".*/", "");
       final String line = "// End " + b;
-      if (!last(lines).equals(line) && !isProto(file)) {
-        log(lines.size(), "Last line should be ''{0}''", line);
+      int size = fileText.size();
+      String lastLine = size > 0 ? fileText.get(size - 1) : "";
+      if (!lastLine.equals(line) && !isProto(file)) {
+        log(size, "Last line should be ''{0}''", line);
       }
     }
   }
 
-  protected void processFiltered(File file, List<String> list) {
+  protected void processFiltered(File file, FileText fileText) {
     boolean off = false;
     int endCount = 0;
     int maxLineLength = 80;
@@ -62,10 +71,9 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
     if (path.contains("/calcite/")) {
       maxLineLength = 100;
     }
-    int i = 0;
-    for (String line : list) {
-      ++i;
-      if (line.contains("\t")) {
+    for (int i = 1; i <= fileText.size(); i++) {
+      String line = fileText.get(i - 1);
+      if (checkTabs && line.contains("\t")) {
         log(i, "Tab");
       }
       if (line.contains("CHECKSTYLE: ON")) {
@@ -77,26 +85,26 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
       if (off) {
         continue;
       }
-      if (line.startsWith("// End ")) {
+      if (checkClosingComment && line.startsWith("// End ")) {
         if (endCount++ > 0) {
           log(i, "End seen more than once");
         }
       }
-      if (isMatches(PATTERN1, line)) {
+      if (checkNewLineAtEndOfFile && isMatches(PATTERN1, line)) {
         log(i, "Newline in string should be at end of line");
       }
-      if (line.contains("{@link")) {
+      if (checkSplitLink && line.contains("{@link")) {
         if (!line.contains("}")) {
           log(i, "Split @link");
         }
       }
-      if (line.endsWith("@Override")) {
+      if (checkOverrideSameLine && line.endsWith("@Override")) {
         log(i, "@Override should not be on its own line");
       }
-      if (line.endsWith("<p>") && !isProto(file)) {
+      if (checkOrphanP && line.endsWith("<p>") && !isProto(file)) {
         log(i, "Orphan <p>. Make it the first line of a paragraph");
       }
-      if (line.contains("@")
+      if (checkJavadocTooLong && line.contains("@")
           && !line.contains("@see")
           && line.length() > maxLineLength) {
         String s = line
@@ -109,13 +117,14 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
           log(i, "Javadoc line too long ({0} chars)", line.length());
         }
       }
-      if (isMatches(PATTERN3, line)) {
+      if (checkParameterWithoutDescription && isMatches(PATTERN3, line)) {
         log(i, "Parameter with no description");
       }
-      if (isMatches(PATTERN4, line) && !isMatches(PATTERN5, line)) {
+      if (checkBadJiraReference && isMatches(PATTERN4, line)
+              && !isMatches(PATTERN5, line)) {
         log(i, "Bad JIRA reference");
       }
-      if (file.getName().endsWith(".java")
+      if (checkOpenParenthesesLevel && file.getName().endsWith(".java")
           && (line.contains("(") || line.contains(")"))) {
         String s = deString(line);
         int o = 0;
@@ -134,7 +143,7 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
         }
       }
     }
-    afterFile(file, list);
+    afterFile(file, fileText);
   }
 
   private boolean isMatches(Pattern pattern, String line) {
@@ -177,6 +186,87 @@ public class HydromaticFileSetCheck extends AbstractFileSetCheck {
 
   public void fireErrors2(File fileName) {
     fireErrors(fileName.getAbsolutePath());
+  }
+
+  public boolean isCheckClosingComment() {
+    return checkClosingComment;
+  }
+
+  public void setCheckClosingComment(boolean checkClosingComment) {
+    this.checkClosingComment = checkClosingComment;
+  }
+
+  public boolean isCheckNewLineAtEndOfFile() {
+    return checkNewLineAtEndOfFile;
+  }
+
+  public void setCheckNewLineAtEndOfFile(boolean checkNewLineAtEndOfFile) {
+    this.checkNewLineAtEndOfFile = checkNewLineAtEndOfFile;
+  }
+
+  public boolean isCheckSplitLink() {
+    return checkSplitLink;
+  }
+
+  public void setCheckSplitLink(boolean checkSplitLink) {
+    this.checkSplitLink = checkSplitLink;
+  }
+
+  public boolean isCheckOverrideSameLine() {
+    return checkOverrideSameLine;
+  }
+
+  public void setCheckOverrideSameLine(boolean checkOverrideSameLine) {
+    this.checkOverrideSameLine = checkOverrideSameLine;
+  }
+
+  public boolean isCheckOrphanP() {
+    return checkOrphanP;
+  }
+
+  public void setCheckOrphanP(boolean checkOrphanP) {
+    this.checkOrphanP = checkOrphanP;
+  }
+
+  public boolean isCheckParameterWithoutDescription() {
+    return checkParameterWithoutDescription;
+  }
+
+  public void setCheckParameterWithoutDescription(
+          boolean checkParameterWithoutDescription) {
+    this.checkParameterWithoutDescription = checkParameterWithoutDescription;
+  }
+
+  public boolean isCheckBadJiraReference() {
+    return checkBadJiraReference;
+  }
+
+  public void setCheckBadJiraReference(boolean checkBadJiraReference) {
+    this.checkBadJiraReference = checkBadJiraReference;
+  }
+
+  public boolean isCheckOpenParenthesesLevel() {
+    return checkOpenParenthesesLevel;
+  }
+
+  public void setCheckOpenParenthesesLevel(boolean checkOpenParenthesesLevel) {
+    this.checkOpenParenthesesLevel = checkOpenParenthesesLevel;
+  }
+
+  public boolean isCheckJavadocTooLong() {
+    return checkJavadocTooLong;
+  }
+
+  public void setCheckJavadocTooLong(boolean checkJavadocTooLong) {
+    this.checkJavadocTooLong = checkJavadocTooLong;
+  }
+
+  public boolean isCheckTabs() {
+    return checkTabs;
+  }
+
+  public void setCheckTabs(boolean checkTabs) {
+    this.checkTabs = checkTabs;
   }
 }
 

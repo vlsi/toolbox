@@ -18,6 +18,7 @@ package net.hydromatic.toolbox.checkstyle;
 
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import com.puppycrawl.tools.checkstyle.api.FileText;
 import com.puppycrawl.tools.checkstyle.api.LocalizedMessage;
 import com.puppycrawl.tools.checkstyle.api.MessageDispatcher;
 
@@ -148,7 +149,7 @@ public class CheckstyleTest {
         });
     check.configure(new DefaultConfiguration("x"));
     final File file = new File("Baz.java");
-    check.processFiltered(file, Arrays.asList(lines));
+    check.processFiltered(file, new FileText(file, Arrays.asList(lines)));
     check.fireErrors2(file);
     for (String error : actualErrors) {
       assertThat(error, Arrays.asList(errors).contains(error), is(true));

@@ -71,7 +71,7 @@ limitations under the License.
     <top.dir>${project.basedir}</top.dir>
     <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
     <gpg.useagent>true</gpg.useagent>
-    <checkstyleVersion>5.7</checkstyleVersion>
+    <checkstyleVersion>8.26</checkstyleVersion>
     <junitVersion>4.12</junitVersion>
   </properties>
 
@@ -124,11 +124,13 @@ limitations under the License.
           <artifactId>tools</artifactId>
         </exclusion>
       </exclusions>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junitVersion}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
